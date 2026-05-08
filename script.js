@@ -1,5 +1,5 @@
 // 씨티애드 포트폴리오 홈페이지의 인터랙션과 문의 폼을 관리하는 스크립트
-const GOOGLE_SCRIPT_URL = "";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyy--S12P1KLEwtIa4AYoC0V__5cfAQ5Ij0b9Bg0sPPuWI-H2PfqyijHkjRMEtQJlJW6w/exec";
 
 const form = document.querySelector("#leadForm");
 const statusEl = document.querySelector("#formStatus");
@@ -55,6 +55,40 @@ if ("IntersectionObserver" in window) {
   revealTargets.forEach((target) => revealObserver.observe(target));
 } else {
   revealTargets.forEach((target) => target.classList.add("is-visible"));
+}
+
+const placeSlider = document.querySelector(".place-slider");
+
+if (placeSlider) {
+  const slides = Array.from(placeSlider.querySelectorAll(".place-slide"));
+  const dots = Array.from(placeSlider.querySelectorAll(".place-slider-dots button"));
+  let currentSlide = 0;
+
+  const showPlaceSlide = (nextIndex) => {
+    currentSlide = (nextIndex + slides.length) % slides.length;
+
+    slides.forEach((slide, index) => {
+      slide.classList.toggle("is-active", index === currentSlide);
+    });
+
+    dots.forEach((dot, index) => {
+      dot.classList.toggle("is-active", index === currentSlide);
+    });
+  };
+
+  let placeSliderTimer = window.setInterval(() => {
+    showPlaceSlide(currentSlide + 1);
+  }, 3600);
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener("click", () => {
+      window.clearInterval(placeSliderTimer);
+      showPlaceSlide(index);
+      placeSliderTimer = window.setInterval(() => {
+        showPlaceSlide(currentSlide + 1);
+      }, 3600);
+    });
+  });
 }
 
 form.addEventListener("submit", async (event) => {
